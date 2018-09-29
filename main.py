@@ -23,9 +23,16 @@ def findPath(root, path, k):
     return False
 
 def findLCAns(root, n1, n2):
+    #define paths globally so their values can be stored
     path1 = []
     path2 = []
 
     if (not findPath(root, path1,n1) or not findPath(root, path2, n2)):
         return -1
     #test path likeness here
+    i = 0
+    while(i < len(path1) && i < len(path2)):
+        if(path2[i]!=path1[i]):
+            break
+        i++
+    return i
