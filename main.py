@@ -35,4 +35,4 @@ def findLCAns(root, n1, n2):
         if(path2[i]!=path1[i]):
             break
         i++
-    return i
+    return path1[i-1] #return the last valid ancestor
