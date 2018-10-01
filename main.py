@@ -7,13 +7,17 @@ class Node:
     #recursive function to create nodes
     def add_node(self, key):
         if not self.key == key:
-            if self.left!=None and self.left.key < key:
+            if self.left!=None and key < self.left.key:
+                print("Adding key " + str(key) + " to left of node")
                 self.left.add_node(key)
             elif self.left==None:
+                print("Adding key " + str(key) + " as left node")
                 self.left = Node(key)
-            elif not self.right==None and self.right.key > key:
+            elif not self.right==None and self.right.key < key:
+                print("Adding key " + str(key) + " to right of node")
                 self.right.add_node(key)
             else:
+                print("Adding key " + str(key) + " as right node")
                 self.right = Node(key)
             return
         else:
