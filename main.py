@@ -4,6 +4,23 @@ class Node:
         self.key = key
         self.left = None
         self.right = None
+    #recursive function to create nodes
+    def add_node(self, key):
+        if not self.key == key:
+            if self.left!=None and self.left.key < key:
+                self.left.add_node(key)
+            elif self.left==None:
+                self.left = Node(key)
+            elif not self.right==None and self.right.key > key:
+                self.right.add_node(key)
+            else:
+                self.right = Node(key)
+            return
+        else:
+            return
+
+
+
 
 #recursive function which takes in a root,
 #a path list and k destination key
@@ -21,8 +38,11 @@ def findPath(root, path, k):
         return True
     path.pop()
     return False
+def createNodes(root, min, max):
+    nodes = []
+    nodes.append(Node(1))
 
-def findLCAns(root, n1, n2):
+def findLCA(root, n1, n2):
     #define paths globally so their values can be stored
     path1 = []
     path2 = []
@@ -31,8 +51,8 @@ def findLCAns(root, n1, n2):
         return -1
     #test path likeness here
     i = 0
-    while(i < len(path1) && i < len(path2)):
+    while(i < len(path1) and i < len(path2)):
         if(path2[i]!=path1[i]):
             break
-        i++
+        i = 1 +i
     return path1[i-1] #return the last valid ancestor
