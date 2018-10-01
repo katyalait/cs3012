@@ -7,23 +7,32 @@ class Node:
     #recursive function to create nodes
     def add_node(self, key):
         if not self.key == key:
-            if self.left!=None and key < self.left.key:
-                print("Adding key " + str(key) + " to left of node")
+            if not self.left==None and key < self.key:
+                print("Adding key " + str(key) + " to left of node " + str(self.key))
                 self.left.add_node(key)
-            elif self.left==None:
-                print("Adding key " + str(key) + " as left node")
+            elif self.left==None and key < self.key:
+                print("Adding key " + str(key) + " as left node of " + str(self.key))
                 self.left = Node(key)
-            elif not self.right==None and self.right.key < key:
-                print("Adding key " + str(key) + " to right of node")
+            elif not self.right==None and self.key < key:
+                print("Adding key " + str(key) + " to right of node " + str(self.key))
                 self.right.add_node(key)
-            else:
-                print("Adding key " + str(key) + " as right node")
+            elif self.right==None and self.key < key:
+                print("Adding key " + str(key) + " as right node of " + str(self.key))
                 self.right = Node(key)
+            else:
+                print("Could not place " + str(key))
             return
         else:
             return
 
-
+    def create_tree(self, root, min, max):
+        root = Node(root)
+        i = min
+        j = max
+        while(i <= j):
+            root.add_node(i)
+            i = i + 1
+        return
 
 
 #recursive function which takes in a root,
