@@ -27,11 +27,17 @@ def test_add_node2():
 
 def test_add_node3():
     root = lca.Node(4)                   #4
-    root.add_node(2)                 #2      5
-    root.add_node(5)             #1     3       8
-    root.add_node(1)            #              7
+    root.add_node(2)                 #2       5
+    root.add_node(5)             #1     3   8   7
+    root.add_node(1)         #                10
     root.add_node(3)
     root.add_node(8)
     root.add_node(7)
     root.add_node(10)
-    assert lca.findLCA(root,7, 10) == 8
+    assert lca.findLCA(root,8, 10) == 5
+
+def test_create_tree():
+    root = lca.create_tree(13, 2, 25)
+    assert lca.findLCA(root, 4, 18)== 13
+    assert lca.findLCA(root,10, 12) == 9
+    assert lca.findLCA(root, 1, 12) == -1

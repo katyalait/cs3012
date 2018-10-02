@@ -1,3 +1,5 @@
+import random
+
 class Node:
 #defining the node class
     def __init__(self, key): #self selection and the key of the node
@@ -6,44 +8,33 @@ class Node:
         self.right = None
     #recursive function to create nodes
     def add_node(self, key):
-        if not self.key == key:
-            if not self.left==None and key < self.key:
-                print("Adding key " + str(key) + " to left of node " + str(self.key))
-                self.left.add_node(key)
-            elif self.left==None and key < self.key:
-                print("Adding key " + str(key) + " as left node of " + str(self.key))
-                self.left = Node(key)
-            elif not self.right==None and self.key < key:
-                print("Adding key " + str(key) + " to right of node " + str(self.key))
-                self.right.add_node(key)
-            elif self.right==None and self.key < key:
-                print("Adding key " + str(key) + " as right node of " + str(self.key))
-                self.right = Node(key)
-            else:
-                print("Could not place " + str(key))
-            return
+        if self.left==None:
+            self.left = Node(key)
+        elif self.right==None:
+            self.right = Node(key)
         else:
-            return
+            if key < self.key:
+                self.left.add_node(key)
+            else:
+                self.right.add_node(key)
 
-    def create_tree(self, root, min, max):
-        root = Node(root)
-        i = min
-        j = max
-        while(i <= j):
-            root.add_node(i)
-            i = i + 1
-        return
+
+def create_tree(root, min, max):
+    new_root = Node(root)
+    i = min
+    j = max
+    while(i <= j):
+        new_root.add_node(i)
+        i = i + 1
+    return new_root
 
 
 #recursive function which takes in a root,
 #a path list and k destination key
 def findPath(root, path, k):
-
     if root is None:
         return False
-
     path.append(root.key)
-
     if root.key == k:
         return True
     if ((root.left != None and findPath(root.left, path, k)) or
@@ -51,9 +42,6 @@ def findPath(root, path, k):
         return True
     path.pop()
     return False
-def createNodes(root, min, max):
-    nodes = []
-    nodes.append(Node(1))
 
 def findLCA(root, n1, n2):
     #define paths globally so their values can be stored
