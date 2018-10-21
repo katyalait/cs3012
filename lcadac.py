@@ -8,7 +8,7 @@ class Graph:
     # Note: As it is a directed graph node pairs are not
     # symmetrical i.e. a child node points to its parent
     # node but not vice versa.
-
+    #self.graph = {}
     def __init__(self):
         # Initialise graph with empty set
         self.graph = {"A": set()}
@@ -17,7 +17,7 @@ class Graph:
         self.graph = graph
 
     def add_child(self, key, parent):
-        self.graph.append(key: set(parent))
+        self.graph[key]= set(parent)
         return parent
 
     def add_parent(self, key, parent_to_add):
@@ -28,19 +28,27 @@ class Graph:
     def findLCADAG(self, root, first, second):
         # Takes in first node key and second node key
         # Returns lowest common Ancestor key
-        
+        yield
 
     def bfs(self, root, start):
         visited = set() #initialise empty set of visited keys
         #key, value pair of vertex to path
         queue = [(start, [start])]
-        paths = () #create a tuple which will return paths
+        paths = [] #create a tuple which will return paths
         while queue:
             (node, path) = queue.pop(0) #enqeue node
-            for vertex in graph[node]:
+            for vertex in self.graph[node]:
                 #iterates through set of parents
                 if vertex == root:
                     paths.append(path + [vertex])
                 else:
-                    queue.append(vertex, path + [next])
+                    queue.append((vertex, path + [vertex]))
         return paths
+
+    def print_paths(self, paths):
+        return_str = ""
+        for path in paths:
+            for vertex in path:
+                return_str += ""+str(vertex)+" --> "
+            return_str+= "END\n"
+        return return_str
