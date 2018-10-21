@@ -4,7 +4,7 @@
 
 class Graph:
     # Graph stores nodes in an adjacency list of dictionaries
-    # with node key as the key and adjacent nodes as a set.
+    # with node key as the key and set of parent nodes as the value.
     # Note: As it is a directed graph node pairs are not
     # symmetrical i.e. a child node points to its parent
     # node but not vice versa.
@@ -25,4 +25,22 @@ class Graph:
         self.graph[key].add(parent_to_add)
         return parent_to_add
 
-    
+    def findLCADAG(self, root, first, second):
+        # Takes in first node key and second node key
+        # Returns lowest common Ancestor key
+        
+
+    def bfs(self, root, start):
+        visited = set() #initialise empty set of visited keys
+        #key, value pair of vertex to path
+        queue = [(start, [start])]
+        paths = () #create a tuple which will return paths
+        while queue:
+            (node, path) = queue.pop(0) #enqeue node
+            for vertex in graph[node]:
+                #iterates through set of parents
+                if vertex == root:
+                    paths.append(path + [vertex])
+                else:
+                    queue.append(vertex, path + [next])
+        return paths
