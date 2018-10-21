@@ -1,7 +1,10 @@
 import random
+#-- depreciated
+
 
 class Node:
 #defining the node class
+#depreciated init
     def __init__(self, key): #self selection and the key of the node
         self.key = key
         self.left = None
