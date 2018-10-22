@@ -29,43 +29,30 @@ class Graph:
         # Takes in list of nodes
         # Returns lowest common ancestor key(s)
         trace = []
-        while nodes:
-            node = nodes.pop(0)
+        for node in nodes:
             paths = []
             if self.bfs(root, node, paths):
                 trace.append(paths)
             else:
                 return [-1]
         print(self.print_paths(trace))
-        paths_a = trace.pop(0)
-        paths_b = trace.pop(0)
-        ancestor = ""
-        max_height = 0
-        lowest_ancestor = ""
-        i=0
-        for path1 in paths_a:
-            for path2 in paths_b:
+        ancestor, lowest_ancestor = "", ""
+        max_height,i = 0, 0
+        for path1 in trace[0]:
+            for path2 in trace[1]:
                 i = 1
                 while(i <= len(path1) and i <= len(path2)):
-                    print("Comparing " + path1[-i] + " and " + path2[-i] + "...")
                     if(path2[-i]!=path1[-i]):
-                        print("No match! Breaking at " + path1[-i])
                         break
                     i = 1 + i
                 if max_height < i:
                     max_height = i
-                    print("New LCA: " + path1[-i+1])
                     lowest_ancestor = path1[-i+1]
-        print("The lowest ancestor is " + str(lowest_ancestor))
         return lowest_ancestor
-
-
     def bfs(self, root, start, paths):
         if root not in self.graph:
-            print("Root not in graph")
             return False
         if start not in self.graph:
-            print("Node not in graph")
             return False
         #key, value pair of vertex to path
         queue = [(start, [start])]

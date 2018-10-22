@@ -1,3 +1,4 @@
+#Script for testing the code in the commandline
 import lcadac
 
 my_graph = {"A": set(), #                 A
