@@ -13,7 +13,7 @@ class Graph:
         # Initialise graph with empty set
         self.graph = {"A": set()}
 
-    def __init__(self, graph):
+    def add_graph(self, graph):
         self.graph = graph
 
     def add_child(self, key, parent):
@@ -25,16 +25,50 @@ class Graph:
         self.graph[key].add(parent_to_add)
         return parent_to_add
 
-    def findLCADAG(self, root, first, second):
-        # Takes in first node key and second node key
-        # Returns lowest common Ancestor key
-        yield
+    def findLCADAG(self, root, nodes):
+        # Takes in list of nodes
+        # Returns lowest common ancestor key(s)
+        trace = []
+        while nodes:
+            node = nodes.pop(0)
+            paths = []
+            if self.bfs(root, node, paths):
+                trace.append(paths)
+            else:
+                return [-1]
+        print(self.print_paths(trace))
+        paths_a = trace.pop(0)
+        paths_b = trace.pop(0)
+        ancestor = ""
+        max_height = 0
+        lowest_ancestor = ""
+        i=0
+        for path1 in paths_a:
+            for path2 in paths_b:
+                i = 1
+                while(i <= len(path1) and i <= len(path2)):
+                    print("Comparing " + path1[-i] + " and " + path2[-i] + "...")
+                    if(path2[-i]!=path1[-i]):
+                        print("No match! Breaking at " + path1[-i])
+                        break
+                    i = 1 + i
+                if max_height < i:
+                    max_height = i
+                    print("New LCA: " + path1[-i+1])
+                    lowest_ancestor = path1[-i+1]
+        print("The lowest ancestor is " + str(lowest_ancestor))
+        return lowest_ancestor
 
-    def bfs(self, root, start):
-        visited = set() #initialise empty set of visited keys
+
+    def bfs(self, root, start, paths):
+        if root not in self.graph:
+            print("Root not in graph")
+            return False
+        if start not in self.graph:
+            print("Node not in graph")
+            return False
         #key, value pair of vertex to path
         queue = [(start, [start])]
-        paths = [] #create a tuple which will return paths
         while queue:
             (node, path) = queue.pop(0) #enqeue node
             for vertex in self.graph[node]:
@@ -43,7 +77,7 @@ class Graph:
                     paths.append(path + [vertex])
                 else:
                     queue.append((vertex, path + [vertex]))
-        return paths
+        return True
 
     def print_paths(self, paths):
         return_str = ""
