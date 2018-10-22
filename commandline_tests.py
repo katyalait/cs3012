@@ -11,4 +11,3 @@ my_graph = {"A": set(), #                 A
 graph = lcadac.Graph()
 graph.add_graph(my_graph)
 print(graph.findLCADAG("A", ["F", "E"]))
-print("Yuh")
