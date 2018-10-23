@@ -14,11 +14,34 @@ class Graph:
         self.graph = {"A": set()}
 
     def add_graph(self, graph):
+        for key in graph:
+            if not key.isalpha():
+                print("Key " + key +" not alphabetical")
+                return False
+            val = graph[key]
+            try:
+                #ensure is valud set by performing union with an empty set
+                tst = val.union(set())
+            except:
+                print("Set not valid for key: " + key)
+                return False
         self.graph = graph
+        return True
 
     def add_child(self, key, parent):
+        if not key.isalpha():
+            return False
+        try:
+            tst = parent.union(set())
+        except:
+            print("Parent set is not valid")
+            return False
+        for par in parent:
+            if not self.graph[par]:
+                print("Parent is not a valid key in graph")
+                return False
         self.graph[key]= set(parent)
-        return parent
+        return True
 
     def add_parent(self, key, parent_to_add):
         #extracts adjacency set for a key and adds parent to set

@@ -10,4 +10,8 @@ my_graph = {"A": set(), #                 A
         "G": set(["E"])}#           G     F
 graph = lcadac.Graph()
 graph.add_graph(my_graph)
-print(graph.findLCADAG("A", ["F", "E"]))
+paths = []
+graph.bfs("A", "E", paths)
+print(graph.print_paths(paths))
+#print(graph.findLCADAG("A", ["F", "E"]))
+#graph.print_paths()
