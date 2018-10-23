@@ -16,7 +16,7 @@ def test_add_graph():
             "F": set(["E"])}#                \
                           #                   F
     tst_graph = lcadag.Graph()
-    assert tst_graph.add_graph(my_graph)==True
+    assert tst_graph.add_graph("A", my_graph)==True
     assert tst_graph.graph == my_graph
 
     #2. test invalid Key
@@ -27,7 +27,7 @@ def test_add_graph():
             "E": set(["B", "C"]),#          E     D
             "F": set(["E"])}#                \
                           #                   F
-    assert tst_graph.add_graph(my_graph)==False
+    assert tst_graph.add_graph("A", my_graph)==False
 
     #3. test invalid value
     my_graph = {"A": set(), #                 A
@@ -37,8 +37,17 @@ def test_add_graph():
             "E": "E and D",#                E     D
             "F": set(["E"])}#                \
                           #                   F
-    assert tst_graph.add_graph(my_graph) == False
+    assert tst_graph.add_graph("A", my_graph) == False
 
+    #4. test invalid root
+    my_graph = {"A": set(), #                 A
+            "B": set(["A"]),#               /  \
+            "C": set(["A"]),#             B     C
+            "D": set(["C"]), #             \  /  \
+            "E": "E and D",#                E     D
+            "F": set(["E"])}#                \
+                          #                   F
+    assert tst_graph.add_graph("1", my_graph) == False
 def test_add_child():
     graph = lcadag.Graph()
     my_graph = {"A": set(), #                 A
@@ -48,7 +57,7 @@ def test_add_child():
             "E": set(["B", "C"]),#          E     D
             "F": set(["E"])}#                \
                           #                   F
-    graph.add_graph(my_graph)
+    graph.add_graph("A", my_graph)
 
     #1. test best case
     child = {"G": set(["E", "B"])}
@@ -72,27 +81,55 @@ def test_LCADAG():
             "G": set(["B"]),#           H     F     H
             "H": set(["E", "D"])}
     graph = lcadag.Graph()
-    graph.add_graph(my_graph)
+    graph.add_graph("A", my_graph)
     #1. test average case
-    lca = graph.findLCADAG("A", ["E", "D"])
+    lca = graph.findLCADAG(["E", "D"])
     assert lca[0] == "C"
     #2. test case where one node is parent of the other
-    lca = graph.findLCADAG("A", ["E", "F"])
+    lca = graph.findLCADAG(["E", "F"])
     assert lca[0] == "E"
     #3. test when nodes have only A in common
-    lca = graph.findLCADAG("A", ["D", "G"])
+    lca = graph.findLCADAG(["D", "G"])
     assert lca[0] == "A"
     #4. test when nodes have many parent nodes
-    lca = graph.findLCADAG("A", ["H", "F"])
-    assert lca == ["E", "D"]
+    lca = graph.findLCADAG(["H", "F"])
+    assert lca == ["E", "D"] or ["D", "E"]
 def test_error_LCADAG():
-    
+    my_graph = {"A": set(), #                 A
+            "B": set(["A"]),#               /  \
+            "C": set(["A"]),#             B     C
+            "D": set(["C"]), #          /  \  /  \
+            "E": set(["B", "C"]),#     G    E     D
+            "F": set(["E", "D"]),#        /  \  /  \
+            "G": set(["B"]),#           H     F     H
+            "H": set(["E", "D"])}
+    graph = lcadag.Graph()
+    graph.add_graph("A", my_graph)
 
+    #1. test for finding nodes not in dict
+    lca = graph.findLCADAG(["D", "K"])
+    assert lca ==-1
 def bfs_test():
-    return  None
-def bfs_test_error():
-    return None
-
+    my_graph = {"A": set(), #                 A
+            "B": set(["A"]),#               /  \
+            "C": set(["A"]),#             B     C
+            "D": set(["C"]), #             \  /  \
+            "E": set(["B", "C"]),#          E     D
+            "F": set(["E"])}#                \
+                          #                   F
+    graph = lcadag.Graph()
+    graph.add_graph("A", my_graph)
+    paths = []
+    #1. test for average case
+    graph.bfs("D", paths)
+    assert paths == ["D", "C", "A"]
+    #2. test for multiple paths case
+    paths = []
+    graph.bfs("E", paths)
+    assert paths == ["E", "C", "A"] or ["E", "B", "A"]
+    #3. error test
+    paths = []
+    assert graph.bfs("K", paths)==False
 def test_print():
     my_graph = {"A": set(), #                 A
             "B": set(["A"]),#               /  \
@@ -102,11 +139,11 @@ def test_print():
             "F": set(["E"])}#                \
                           #                   F
     graph = lcadag.Graph()
-    graph.add_graph(my_graph)
+    graph.add_graph("A", my_graph)
     paths = []
-    graph.bfs("A", "D", paths)
+    graph.bfs("D", paths)
     assert graph.print_paths(paths)== "D --> C --> A --> END\n"
     paths = []
-    graph.bfs("A", "E", paths)
+    graph.bfs("E", paths)
     #print(graph.print_paths(paths))
     assert graph.print_paths(paths) == "E --> C --> A --> END\nE --> B --> A --> END\n" or "E --> B --> A --> END\nE --> C --> A --> END\n"

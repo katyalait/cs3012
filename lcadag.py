@@ -12,8 +12,12 @@ class Graph:
     def __init__(self):
         # Initialise graph with empty set
         self.graph = {"A": set()}
-
-    def add_graph(self, graph):
+        self.root = "A"
+    def add_graph(self, root, graph):
+        if not root.isalpha():
+            print("Root is not alphabetical")
+            return False
+        self.root = "A"
         for key in graph:
             if not key.isalpha():
                 print("Key " + key +" not alphabetical")
@@ -45,13 +49,13 @@ class Graph:
         self.graph[key]= set(parent)
         return True
 
-    def findLCADAG(self, root, nodes):
+    def findLCADAG(self, nodes):
         # Takes in list of nodes
         # Returns lowest common ancestor key(s)
         trace = []
         for node in nodes:
             paths = []
-            if self.bfs(root, node, paths):
+            if self.bfs(node, paths):
                 trace.append(paths)
             else:
                 return -1
@@ -77,9 +81,7 @@ class Graph:
         #check if they share parents
         print("Final LCA: " + str(path1[-i+1]))
         return lowest_ancestor
-    def bfs(self, root, start, paths):
-        if root not in self.graph:
-            return False
+    def bfs(self, start, paths):
         if start not in self.graph:
             return False
         #key, value pair of vertex to path
@@ -88,7 +90,7 @@ class Graph:
             (node, path) = queue.pop(0) #enqeue node
             for vertex in self.graph[node]:
                 #iterates through set of parents
-                if vertex == root:
+                if vertex == self.root:
                     paths.append(path + [vertex])
                 else:
                     queue.append((vertex, path + [vertex]))
