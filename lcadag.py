@@ -37,16 +37,13 @@ class Graph:
             print("Parent set is not valid")
             return False
         for par in parent:
-            if not self.graph[par]:
+            try:
+                tst = self.graph[par]
+            except:
                 print("Parent is not a valid key in graph")
                 return False
         self.graph[key]= set(parent)
         return True
-
-    def add_parent(self, key, parent_to_add):
-        #extracts adjacency set for a key and adds parent to set
-        self.graph[key].add(parent_to_add)
-        return parent_to_add
 
     def findLCADAG(self, root, nodes):
         # Takes in list of nodes
@@ -57,9 +54,9 @@ class Graph:
             if self.bfs(root, node, paths):
                 trace.append(paths)
             else:
-                return [-1]
+                return -1
         print(self.print_paths(trace))
-        ancestor, lowest_ancestor = "", ""
+        lowest_ancestor = ""
         max_height,i = 0, 0
         for path1 in trace[0]:
             for path2 in trace[1]:
@@ -68,9 +65,17 @@ class Graph:
                     if(path2[-i]!=path1[-i]):
                         break
                     i = 1 + i
-                if max_height < i:
-                    max_height = i
+                if i>max_height: #if max_height reached
+                    max_height=i
+                    print("New LCA " + str(path1[-i+1]))
                     lowest_ancestor = path1[-i+1]
+                elif i==max_height and lowest_ancestor!=path1[-i+1]:
+                    tmp = lowest_ancestor
+                    lowest_ancestor = []
+                    lowest_ancestor.append(tmp)
+                    lowest_ancestor.append(path1[-i+1])
+        #check if they share parents
+        print("Final LCA: " + str(path1[-i+1]))
         return lowest_ancestor
     def bfs(self, root, start, paths):
         if root not in self.graph:
