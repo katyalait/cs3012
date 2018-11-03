@@ -1,30 +1,51 @@
 from github import Github
 
 #creating access through access token
-g = Github("4df439e89aaaa3d4e55b1ad70f31efede72c06c2")
+g = Github("68b126c142c7c1a646b0c53a316fcf0d4be7ac5c")
 repo = g.get_repo("phadej/github")
-contents = repo.get_contents("")
 owner = repo.owner
-#gets the contents of main directory, returns as a ContentFile JSON object
-for content_file in contents:
-    print(content_file)
+known_repo_contributors = []
 
-events = repo.get_events()
-for event in events:
-    print(event)
+def collect_contributors():
+    repo_contributors = []
+    contributors = repo.get_contributors()
+    print("Establishing repo contributors ...")
+    for contributor in contributors:
+        if(contributor!=owner):
+            name = str(contributor.name)
+            if name!="None":
+                #print("Contributor: " + str(name))
+                repo_contributors.append(contributor)
 
-issues = repo.get_issues()
-for issue in issues:
-    print(issue)
-    issue_events = issue.get_events()
-    for issue_event in issue_events:
-        actor = issue_event.actor
-        if(actor!=owner):
-            print("\tEvents: " + str(issue_event))
-            print("\t\tActor: " + str(actor) + "Followed by: " + str(actor.followers))
+    return repo_contributors
 
-contributors = repo.get_contributors()
-for contributor in contributors:
-    if(contributor!=owner):
-        name = contributor.name
-        print("Contributor: " + str(name))
+def find_most_popular(repo_contributors, highest_following_of_contributors):
+    most_popular_contributor = owner
+    known_repo_contributors = []
+    print("Searching contributor followers ... ")
+    for contributor in repo_contributors:
+        followers = contributor.get_followers()
+        contributors_following_current = 0
+        temp_followers_known = []
+        for follower in followers:
+            if follower in repo_contributors:
+                contributors_following_current += 1
+                print("Found follower " +str(follower.login) + " for " + str(contributor.login))
+                temp_followers_known.append(follower)
+        if contributors_following_current > highest_following_of_contributors:
+            print("Found new popular contributor!")
+            highest_following_of_contributors= contributors_following_current
+            most_popular_contributor = contributor
+            known_repo_contributors = temp_followers_known
+    known_repo_contributors.append(most_popular_contributor)
+    return known_repo_contributors
+
+contributors = collect_contributors()
+followers = []
+known_repo_contributors = find_most_popular(contributors, 0)
+most_popular_contributor = known_repo_contributors.pop()
+
+print("The contributor to the Haskell repo most followed by other contributors is " + str(most_popular_contributor.name) +"\nLogin name: " + str(most_popular_contributor.login))
+print("Contributors following user: ")
+for follower in known_repo_contributors:
+    print("\t-" + str(follower.login))
