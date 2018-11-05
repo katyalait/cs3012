@@ -1,11 +1,26 @@
 from github import Github
-
+import getpass
 #creating access through access token
-g = Github("68b126c142c7c1a646b0c53a316fcf0d4be7ac5c")
-repo = g.get_repo("phadej/github")
-owner = repo.owner
+g = ""
+repo = ""
+owner = ""
 known_repo_contributors = []
 
+def start():
+    username = input("Please put in your username: ")
+    password = getpass.getpass("Please provide your password: ")
+    g = Github(username, password)
+    error = True
+    while(error):
+        try:
+            repo_to_use = input("Please put in the git repo you wish to interrogate: ")
+            repo = g.get_repo(repo_to_use)
+            error = False
+        except:
+            print("Incorrect repo please try again")
+    return repo
+
+#collects all the contributors for a git
 def collect_contributors():
     repo_contributors = []
     contributors = repo.get_contributors()
@@ -16,8 +31,11 @@ def collect_contributors():
             if name!="None":
                 #print("Contributor: " + str(name))
                 repo_contributors.append(contributor)
-
+    #returns contributors in a list
     return repo_contributors
+
+#finds the most popular of contributors to a git based on how many
+#other contributors follow said user
 
 def find_most_popular(repo_contributors, highest_following_of_contributors):
     most_popular_contributor = owner
@@ -38,14 +56,15 @@ def find_most_popular(repo_contributors, highest_following_of_contributors):
             most_popular_contributor = contributor
             known_repo_contributors = temp_followers_known
     known_repo_contributors.append(most_popular_contributor)
+    #returns the contributors to the git that follow the most popular contributor
     return known_repo_contributors
-
+repo = start()
 contributors = collect_contributors()
 followers = []
 known_repo_contributors = find_most_popular(contributors, 0)
 most_popular_contributor = known_repo_contributors.pop()
 
-print("The contributor to the Haskell repo most followed by other contributors is " + str(most_popular_contributor.name) +"\nLogin name: " + str(most_popular_contributor.login))
+print("The contributor to this repo most followed by other contributors is " + str(most_popular_contributor.name) +"\nLogin name: " + str(most_popular_contributor.login))
 print("Contributors following user: ")
 for follower in known_repo_contributors:
     print("\t-" + str(follower.login))
