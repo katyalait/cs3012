@@ -25,6 +25,7 @@ def start():
 
 #collects all the contributors for a git
 def collect_contributors(repo):
+    owner = repo.owner
     repo_contributors = []
     contributors = repo.get_contributors()
     print("Establishing repo contributors ...")
@@ -41,7 +42,7 @@ def collect_contributors(repo):
 #other contributors follow said user
 
 def find_most_popular(repo_contributors, highest_following_of_contributors):
-    most_popular_contributor = owner
+    most_popular_contributor = repo.owner
     known_repo_contributors = []
     print("Searching contributor followers ... ")
     for contributor in repo_contributors:
@@ -66,7 +67,7 @@ contributors = collect_contributors(repo)
 followers = []
 known_repo_contributors = find_most_popular(contributors, 0)
 most_popular_contributor = known_repo_contributors.pop()
-
+login = "ktlait"
 print("The contributor to this repo most followed by other contributors is " + str(most_popular_contributor.name) +"\nLogin name: " + str(most_popular_contributor.login))
 print("Contributors following user: ")
 for follower in known_repo_contributors:
