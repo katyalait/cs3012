@@ -1,15 +1,18 @@
 from github import Github
 import getpass
 #creating access through access token
-g = ""
-repo = ""
-owner = ""
-known_repo_contributors = []
 
 def start():
-    username = input("Please put in your username: ")
-    password = getpass.getpass("Please provide your password: ")
-    g = Github(username, password)
+    access = False
+    while(not access):
+        username = input("Please put in your username: ")
+        password = getpass.getpass("Please provide your password: ")
+        try:
+            g = Github(username, password)
+            access = True
+        except:
+            print("Incorrect details try again")
+
     error = True
     while(error):
         try:
@@ -21,7 +24,7 @@ def start():
     return repo
 
 #collects all the contributors for a git
-def collect_contributors():
+def collect_contributors(repo):
     repo_contributors = []
     contributors = repo.get_contributors()
     print("Establishing repo contributors ...")
@@ -59,7 +62,7 @@ def find_most_popular(repo_contributors, highest_following_of_contributors):
     #returns the contributors to the git that follow the most popular contributor
     return known_repo_contributors
 repo = start()
-contributors = collect_contributors()
+contributors = collect_contributors(repo)
 followers = []
 known_repo_contributors = find_most_popular(contributors, 0)
 most_popular_contributor = known_repo_contributors.pop()
