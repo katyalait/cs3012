@@ -2,9 +2,12 @@ from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from .forms import LoginForm, GitForm
-from .chart import Chart
+from .chart import SuggestedMapping, BubbleChart, RadarChart
+from .languages import LanguagesFind
 from .models import Login
 from urllib.parse import urlencode
+from jchart import Chart
+import github
 
 def get_login(request):
     if request.method == 'POST':
@@ -33,10 +36,23 @@ def get_login(request):
 def show(request):
     ref_id = request.GET.get('ref_id')
     user = get_object_or_404(Login, pk=ref_id)
-    chart = Chart(user.username, user.password)
+    chart = SuggestedMapping(user.username, user.password)
     suggested_repositories = chart.get_repos()
-    suggested_list = []
+    contributors = []
+    forks_count = []
+    date = []
+    names = []
     for suggested in suggested_repositories:
-        suggested_list.append(suggested.full_name)
+        names.append(suggested.name)
+        contributors.append(len(list(suggested.get_contributors())))
+        forks_count.append(suggested.forks_count)
+        date.append(suggested.updated_at)
 
-    return render(request, 'main/select.html', {'suggested': suggested_repositories})
+
+    bubble = BubbleChart()
+    radar = RadarChart()
+    lf = LanguagesFind()
+    languages = lf.get_languages(user.username, user.password)
+
+    return render(request, 'main/select.html', {'bubble_chart': bubble, 'contributors': contributors,
+    'forks_count': forks_count, 'date': date, 'names': names, 'languages': languages, 'radar': radar})

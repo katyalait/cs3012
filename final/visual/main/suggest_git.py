@@ -132,8 +132,7 @@ class Suggest:
             filtered_repos = sorted(filtered_repos,key=attrgetter("stargazers_count"),reverse=True)
 
             self.suggested_repositories = Suggest.get_unique_repositories(filtered_repos)
-            for suggested in self.suggested_repositories:
-                print(str(suggested))
+            return self.suggested_repositories
 
 
     def __get_repos_for_query(self, query):

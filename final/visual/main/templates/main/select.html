@@ -7,16 +7,18 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 </head>
 <body>
 
 <div class="container">
-
-    {% csrf_token %}
-    {% for suggestion in suggested %}
-      <p> - {{ suggestion}} </p>
-    {% endfor %}
+  {% load jchart %}
+  <!--{% render_chart bubble_chart contributors forks_count date %} -->
+  {% render_chart radar languages %}
 </div>
-
+<!-- table for suggested gits -->
+<!-- graph showing the languages for the gits -->
+<!-- graph showing productivity
 </body>
 </html>
