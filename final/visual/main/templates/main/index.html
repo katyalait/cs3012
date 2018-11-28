@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Bootstrap Example</title>
+  <title>GitHub Visual</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -11,12 +11,17 @@
 <body>
 
 <div class="container">
-  <h2>Github Access Form</h2>
+  <h2>Login</h2>
+  <p> Please provide your github login details </p>
   <form method="post">
     {% csrf_token %}
-    {{ form }}
+    {{form.as_p}}
     <input type="submit" value="Submit">
   </form>
+</div>
+<div class="container">
+  <ul>
+</ul>
 </div>
 
 </body>

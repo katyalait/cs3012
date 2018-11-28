@@ -11,12 +11,11 @@
 <body>
 
 <div class="container">
-  <h2>Github Access Form</h2>
-  <form method="post">
+
     {% csrf_token %}
-    {{ form }}
-    <input type="submit" value="Search">
-  </form>
+    {% for suggestion in suggested %}
+      <p> - {{ suggestion}} </p>
+    {% endfor %}
 </div>
 
 </body>

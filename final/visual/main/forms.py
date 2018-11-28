@@ -1,11 +1,13 @@
 from django import forms
 from github import Github
 from .access_functions import start, repo
+from .models import Login
 
-
-class LoginForm(forms.Form):
-    username = forms.CharField(label='Username', max_length=100)
-    password = forms.CharField(label='Password', max_length=100, widget = forms.PasswordInput)
+class LoginForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput)
+    class Meta:
+        model = Login
+        fields = ['username', 'password']
 
     def clean(self):
         cd = self.cleaned_data
@@ -16,9 +18,10 @@ class LoginForm(forms.Form):
             access = True
         except:
             access = False
-        if access ==False:
+            print("Wrong login")
             raise forms.ValidationError("Incorrect login details.")
         return cd
+
 
 class GitForm(forms.Form):
     gitname = forms.CharField(label='Git Repo', max_length=100)
