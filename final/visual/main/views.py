@@ -2,8 +2,10 @@ from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, reverse, get_object_or_404
 from .forms import LoginForm, GitForm
-from .chart import SuggestedMapping, BubbleChart, RadarChart
+from .chart import RadarChart, LineChart, BarChart
+from .productivity import Productivity, FollowingProductivity
 from .languages import LanguagesFind
+from .suggest_git import Suggest
 from .models import Login
 from urllib.parse import urlencode
 from jchart import Chart
@@ -36,23 +38,32 @@ def get_login(request):
 def show(request):
     ref_id = request.GET.get('ref_id')
     user = get_object_or_404(Login, pk=ref_id)
-    chart = SuggestedMapping(user.username, user.password)
-    suggested_repositories = chart.get_repos()
-    contributors = []
-    forks_count = []
-    date = []
-    names = []
-    for suggested in suggested_repositories:
-        names.append(suggested.name)
-        contributors.append(len(list(suggested.get_contributors())))
-        forks_count.append(suggested.forks_count)
-        date.append(suggested.updated_at)
 
+    sg = Suggest(user.username, user.password)
+    sg.get_suggested()
+    suggested_repositories = sg.suggested_repositories
 
-    bubble = BubbleChart()
-    radar = RadarChart()
     lf = LanguagesFind()
     languages = lf.get_languages(user.username, user.password)
 
-    return render(request, 'main/select.html', {'bubble_chart': bubble, 'contributors': contributors,
-    'forks_count': forks_count, 'date': date, 'names': names, 'languages': languages, 'radar': radar})
+    pr = Productivity()
+    dates = pr.get_dates(user.username, user.password)
+    suggested_list = []
+    for suggested in suggested_repositories:
+        suggested_list.append({
+        'name': suggested.name,
+        'url': suggested.url,
+        'contributors': len(list(suggested.get_contributors())),
+        'forks_count': suggested.forks_count
+        })
+    fpr = FollowingProductivity()
+    followingprod = fpr.get_following(user.username, user.password)
+    
+    bar = BarChart()
+    bar.initialise()
+    radar = RadarChart()
+    line = LineChart()
+
+    return render(request, 'main/select.html', {'suggested': suggested_list,
+    'languages': languages, 'radar': radar, 'line': line, 'dates': dates, 'bar': bar, 'followingprod': followingprod,
+    'username': user.username})

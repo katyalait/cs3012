@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Bootstrap Example</title>
+  <title>Github Visual</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -13,12 +13,54 @@
 <body>
 
 <div class="container">
-  {% load jchart %}
-  <!--{% render_chart bubble_chart contributors forks_count date %} -->
-  {% render_chart radar languages %}
+  <div class="row">
+    <h2> Analysis of {{username}} Github Account </h2>
+  </div>
+  <div class="row">
+    <div class="col-sm-6" style="display: block; max-height: 500px;overflow-y: auto; -ms-overflow-style: -ms-autohiding-scrollbar;">
+    <table class="table table-hover" >
+    <h2> Suggested Repositories </h2>
+    <p> A list of suggested repositories based on calculated interests of the user </p>
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Forks</th>
+      <th scope="col">Contributors</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for suggestion in suggested %}
+    <tr>
+      <td><a href="{{suggestion.url}}">{{ suggestion.name }}</td>
+      <td>{{ suggestion.forks_count}}</td>
+      <td>{{ suggestion.contributors }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
 </div>
-<!-- table for suggested gits -->
-<!-- graph showing the languages for the gits -->
-<!-- graph showing productivity
+<div class="col-sm-6">
+  <h2> Productivity </h2>
+  <p> Shows to the user their activity within the git over a period of time </p>
+{% load jchart %}
+{% render_chart line dates %}
+</div>
+</div>
+  <div class="row">
+    <div class="col-sm-6">
+      <h2> Languages Used </h2>
+      <p> Shows to user the the languages used within their repositories</p>
+          {% load jchart %}
+          {% render_chart radar languages %}
+        </div>
+    <div class="col-sm-6">
+      <!-- the most active people they follow -->
+      <h2> Active Following </h2>
+      <p> Shows to the user the public repos of their followers</p>
+          {% load jchart %}
+          {% render_chart bar followingprod %}
+  </div>
+</div>
+</div>
 </body>
 </html>

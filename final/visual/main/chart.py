@@ -5,17 +5,25 @@ from github import *
 from random import *
 from datetime import *
 
-class SuggestedMapping():
+class LineChart(Chart):
+    chart_type = 'line'
+    scales = {
+        'xAxes': [Axes(type='time', position='bottom')],
 
-    def __init__(self, username, password):
+    }
 
-        self.__suggest = Suggest(username, password)
-        self.__suggest.get_suggested()
-        self.__suggested_repos = self.__suggest.suggested_repositories
-
-    def get_repos(self):
-        return self.__suggested_repos
-
+    def get_datasets(self, dates):
+        data = []
+        for date in dates:
+            data.append({
+            'y': dates[date],
+            'x': date
+            })
+        return [DataSet(
+            type='line',
+            label='Activity',
+            data=data,
+        )]
 
 class RadarChart(Chart):
     chart_type = 'radar'
@@ -32,50 +40,49 @@ class RadarChart(Chart):
             dataset.append(languages[language])
 
         return [ DataSet(
-        label="Languages",
+        label="Repositories",
         data = dataset,
-        color =(179, 181, 198),
+        color =(255, 99, 132),
         )
 
         ]
-class BubbleChart(Chart):
-    chart_type = 'bubble'
-    scales = { 'xAxes': [Axes(type='time')],
-        }
+class BarChart(Chart):
+    chart_type = 'bar'
 
-    def get_labels(self, contributors, forks_count, date):
-        labels = []
-        for contributor in contributors:
-            string = "Label" + str(contributor)
-            labels.append(string)
-        return labels
-    def get_datasets(self, contributors, forks_count, date):
-        data = []
-        index = len(contributors)
-        for i in range(0,index-1):
-            print("Int issue is with :" + str(contributors[i]))
+    def initialise(self):
+        self.following = []
 
-            contributor = contributors[i]*3 #scale
-            forks_counted = forks_count[i]
-            last_updated_month = date[i].month
-            last_updated_year = date[i].year
-            print("Month: " + str(last_updated_month) + " Year: " + str(last_updated_year))
-            last_updated = date[i]
-            if last_updated_year >= 2017 and last_updated_month >9:
-                data.append(
-                {
-                'x': last_updated,
-                'y': forks_counted,
-                'r': contributor
-                }
-                )
+    def get_labels(self, following):
+        return self.following
 
-        return [DataSet(label="Suggested Repositories",
-                        data=data,
-                        backgroundColor='#FF6384',
-                        hoverBackgroundColor='#FF6384',
-                        borderColor='red'),
-                #DataSet(label = "Test", data = {'x': '2018-11-12', 'y': 14, 'r': 13}, backgroundColor='#FF6384', hoverBackgroundColor='#FF6384',
-                #        borderColor='red'
-                #        )
-                ]
+    def get_datasets(self, following_contributions):
+        data = {}
+        for user in following_contributions:
+            if len(data)< 7:
+                data.update({user: following_contributions[user]})
+            else:
+                for line in data:
+                    current = data[line]
+                    res = following_contributions[user]
+                    if res > current:
+                        del data[line]
+                        data[follow] = following_contributions[follow]
+                        break
+        return_data = []
+        for line in data:
+            self.following.append(line) # get label
+            return_data.append(data[line]) #get data
+        colors = [
+            rgba(255, 99, 132, 0.2),
+            rgba(54, 162, 235, 0.2),
+            rgba(255, 206, 86, 0.2),
+            rgba(75, 192, 192, 0.2),
+            rgba(153, 102, 255, 0.2),
+            rgba(255, 159, 64, 0.2)
+        ]
+
+        return [DataSet(
+                        data=return_data,
+                        borderWidth=1,
+                        backgroundColor=colors,
+                        borderColor=colors)]
