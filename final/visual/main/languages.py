@@ -6,9 +6,11 @@ class LanguagesFind():
         self.__frequency = []
 
     def get_languages(self, username, password):
+        #create github object
         g = Github(username, password)
 
         gitrepos = g.get_user().get_repos()
+        
         for repo in gitrepos:
             language = repo.language
             try:

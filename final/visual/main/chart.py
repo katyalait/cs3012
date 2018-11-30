@@ -13,6 +13,7 @@ class LineChart(Chart):
     }
 
     def get_datasets(self, dates):
+        # passed in dict contains the dates and the number describing activity as the value
         data = []
         for date in dates:
             data.append({
@@ -28,12 +29,14 @@ class LineChart(Chart):
 class RadarChart(Chart):
     chart_type = 'radar'
 
+    # gets the languages from the dict
     def get_labels(self, languages):
         list = []
         for language in languages:
             list.append(language)
         return list
 
+    # extracts the value from the dict
     def get_datasets(self, languages):
         dataset = []
         for language in languages:
@@ -49,24 +52,34 @@ class RadarChart(Chart):
 class BarChart(Chart):
     chart_type = 'bar'
 
+    # creates a global variable that holds the names of the users represented on the bar chart
     def initialise(self):
         self.following = []
 
     def get_labels(self, following):
         return self.following
 
-    def get_datasets(self, following_contributions):
+    def get_datasets(self, following_repos):
         data = {}
-        for user in following_contributions:
+        # for each person the user follows
+        for user in following_repos:
+            # max number of users represented on the bar chart
             if len(data)< 7:
-                data.update({user: following_contributions[user]})
+                # initial population
+                data.update({user: following_repos[user]})
             else:
+                # if any more users are found then we check the 6 currently in the dict
                 for line in data:
+                    # we extract the number of repos they have
                     current = data[line]
-                    res = following_contributions[user]
+                    # we get the number of repos the person they follow has
+                    res = following_repos[user]
+                    # if the number of repos the person has happens to be greater than the one in the dict
                     if res > current:
+                        # we delete that line in the dict
                         del data[line]
-                        data[follow] = following_contributions[follow]
+                        # create a new line in the dict for the person with the most repos
+                        data[follow] = following_repos[follow]
                         break
         return_data = []
         for line in data:

@@ -59,6 +59,6 @@ class FollowingProductivity():
         self.user = g.get_user()
         users_following = self.user.get_following()
         for user_f in users_following:
-            contributions = user_f.public_repos
-            self.following_productivity[user_f.login] = contributions
+            repos = user_f.public_repos
+            self.following_productivity[user_f.login] = repos
         return self.following_productivity
