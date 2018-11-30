@@ -78,4 +78,10 @@ def show(request):
     # render our template
     return render(request, 'main/select.html', {'suggested': suggested_list,
     'languages': languages, 'radar': radar, 'line': line, 'dates': dates, 'bar': bar, 'followingprod': followingprod,
-    'username': user.username})
+    'username': user.username, 'ref_id': ref_id})
+
+def log_out(request, ref_id):
+    user = get_object_or_404(Login, pk=ref_id)
+    user.delete()
+    base_url = reverse('get_login')
+    return redirect(base_url)
