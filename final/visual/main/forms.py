@@ -4,7 +4,7 @@ from .access_functions import start, repo
 from .models import Login
 
 class LoginForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput)
+    #password = forms.CharField(widget=forms.PasswordInput)
     class Meta:
         model = Login
         fields = ['username', 'password']
